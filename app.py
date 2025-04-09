@@ -11,6 +11,7 @@ import time
 import uuid
 import base64
 from openai import OpenAI
+import tempfile
 
 # Initialize session state for feedback and image analysis
 if 'feedback_submitted' not in st.session_state:
@@ -140,7 +141,10 @@ def save_feedback_data(feedback_type, prompt, model, quality, style, size):
     }
     
     # Define fixed feedback directory path
-    feedback_dir = "/feedback_data"
+    #feedback_dir = "/feedback_data"
+    # Define feedback directory path using tempfile for compatibility
+    temp_dir = tempfile.gettempdir()
+    feedback_dir = os.path.join(temp_dir, "feedback_data")
     
     # Debug message - print to console for tracking
     print(f"DEBUG: Saving feedback to {feedback_dir}")
@@ -219,7 +223,11 @@ def read_feedback_data():
     """
     Simple function to read feedback data from the feedback directory
     """
-    feedback_dir = "/Users/admin/Sites/vibe-coding/Streamlit-Inpaint/feedback_data"
+    #feedback_dir = "/Users/admin/Sites/vibe-coding/Streamlit-Inpaint/feedback_data"
+
+    # Use the same temporary directory as save_feedback_data
+    temp_dir = tempfile.gettempdir()
+    feedback_dir = os.path.join(temp_dir, "feedback_data")
     central_filepath = os.path.join(feedback_dir, "feedback.json")
     all_feedback = []
     
@@ -236,7 +244,7 @@ def read_feedback_data():
                         all_feedback.append(data)
         except Exception as e:
             print(f"Error reading central feedback file: {str(e)}")
-    
+
     # Also check individual feedback files as backup
     if os.path.exists(feedback_dir) and os.path.isdir(feedback_dir):
         json_files = [f for f in os.listdir(feedback_dir) if f.endswith('.json') and f != "feedback.json"]
@@ -1291,7 +1299,9 @@ if not uploaded_file:
                 st.json(sorted_entries[0])
                 
                 # Show path to the feedback file
-                st.info(f"Feedback data is stored in: /Users/admin/Sites/vibe-coding/Streamlit-Inpaint/feedback_data/")
+                temp_dir = tempfile.gettempdir()
+                feedback_dir = os.path.join(temp_dir, "feedback_data")
+                st.info(f"Feedback data is stored in: {feedback_dir}")
             else:
                 st.info("No test entries found yet.")
     
