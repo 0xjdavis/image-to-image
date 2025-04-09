@@ -140,7 +140,7 @@ def save_feedback_data(feedback_type, prompt, model, quality, style, size):
     }
     
     # Define fixed feedback directory path
-    feedback_dir = "/Users/admin/Sites/vibe-coding/Streamlit-Inpaint/feedback_data"
+    feedback_dir = "/feedback_data"
     
     # Debug message - print to console for tracking
     print(f"DEBUG: Saving feedback to {feedback_dir}")
